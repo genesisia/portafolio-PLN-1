@@ -1,0 +1,14 @@
+
+from deep_translator import GoogleTranslator
+
+texto = "hola"
+print("español:",texto)
+
+# Traducir
+ingles = GoogleTranslator(source='es', target='en').translate(texto)
+frances = GoogleTranslator(source='es', target='fr').translate(texto)
+aleman = GoogleTranslator(source='es', target='de').translate(texto)
+
+print("Inglés:", ingles)
+print("Francés:", frances)
+print("Alemán:", aleman)
