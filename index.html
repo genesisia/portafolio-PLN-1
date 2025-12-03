@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python y Lenguaje Natural</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="rgba(255,255,255,0.1)"/></svg>') repeat-x;
+            background-size: 100% 120px;
+            animation: wave 20s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { background-position: 0 0; }
+            100% { background-position: 1200px 0; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::after {
+            content: '↓';
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Catalog Section */
+        .catalog {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            background: #f5f7fa;
+        }
+
+        .catalog-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .catalog-header h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .catalog-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .cards-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(102,126,234,0.3);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #fff;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .catalog-header h2 {
+                font-size: 2rem;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .catalog {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Python y Lenguaje Natural</h1>
+            <p>Explora herramientas de procesamiento de texto con Python</p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section class="catalog">
+        <div class="catalog-header">
+            <h2>Catálogo de Tareas</h2>
+            <p>Descarga el código de las diferentes herramientas de procesamiento de lenguaje natural</p>
+        </div>
+
+        <div class="cards-container">
+            <!-- Card 1: Tokenizar -->
+            <div class="card">
+                <div class="card-image">📝</div>
+                <div class="card-content">
+                    <h3 class="card-title">Tokenizar</h3>
+                    <p class="card-description">Divide texto en tokens individuales (palabras, frases o caracteres). Fundamental para el análisis de texto y procesamiento de lenguaje natural.</p>
+                    <a href="tokens.py" class="download-btn" target="_blank">Descargar Código .py</a>
+                </div>
+            </div>
+             <!-- Card 3: traductor.html -->
+            <div class="card">
+                <div class="card-image">🔢</div>
+                <div class="card-content">
+                    <h3 class="card-title">traductor.html</h3>
+                    <p class="card-description"> </p>
+                    <a href="traductor.html" class="download-btn" >Descargar Código</a>
+                </div>
+            </div>
+
+            <!-- Card 4: Longitud de Palabras -->
+            <div class="card">
+                <div class="card-image">📏</div>
+                <div class="card-content">
+                    <h3 class="card-title">Longitud de Palabras</h3>
+                    <p class="card-description">Calcula y analiza la longitud de palabras en un texto. Útil para análisis de complejidad y legibilidad de documentos.</p>
+                    <a href="#" class="download-btn" onclick="downloadCode('longitud'); return false;">Descargar Código</a>
+                </div>
+            </div>
+
+            <!-- Card 5: Contar Palabras -->
+            <div class="card">
+                <div class="card-image">🔢</div>
+                <div class="card-content">
+                    <h3 class="card-title">Contar Palabras</h3>
+                    <p class="card-description">Cuenta la frecuencia de palabras en un texto. Perfecto para análisis de contenido y generación de nubes de palabras.</p>
+                    <a href="#" class="download-btn" onclick="downloadCode('contar'); return false;">Descargar Código</a>
+                </div>
+            </div>
+
+            <!-- Card 6: Análisis de Sentimiento -->
+            <div class="card">
+                <div class="card-image">😊</div>
+                <div class="card-content">
+                    <h3 class="card-title">Análisis de Sentimiento</h3>
+                    <p class="card-description">Determina si un texto es positivo, negativo o neutral. Ideal para análisis de opiniones y redes sociales.</p>
+                    <a href="analisis_de_sentimientos.py" class="download-btn" onclick="downloadCode('sentimiento'); return false;">Descargar Código</a>
+                </div>
+            </div>
+
+            <!-- Card 9:chat_sentimientos -->
+            <div class="card">
+                <div class="card-image">🔢</div>
+                <div class="card-content">
+                    <h3 class="card-title">chat_sentimientos</h3>
+                    <p class="card-description">traduce tu info.</p>
+                    <a href="#" class="download-btn" onclick="downloadCode('contar'); return false;">Descargar Código</a>
+                </div>
+            </div>
+                <!-- Card 7: Eliminar Signos de Puntuación -->
+            <div class="card">
+                <div class="card-image">🧹</div>
+                <div class="card-content">
+                    <h3 class="card-title">Eliminar Signos de Puntuación</h3>
+                    <p class="card-description">Limpia el texto eliminando signos de puntuación. Esencial para preprocesar datos antes del análisis.</p>
+                    <a href="#" class="download-btn" onclick="downloadCode('puntuacion'); return false;">Descargar Código</a>
+                </div>
+            </div> 
+
+                <!-- Card 8:chat listas -->
+            <div class="card">
+                <div class="card-image">🧹</div>
+                <div class="card-content">
+                    <h3 class="card-title">chat listas</h3>
+                    <p class="card-description">Limpia el texto eliminando signos de puntuación. Esencial para preprocesar datos antes del análisis.</p>
+                    <a href="#" class="download-btn" onclick="downloadCode('chat_listas'); return false;">Descargar Código</a>
+                </div>
+            </div> 
+
+        </div>
+
+           
+
+           
+    </section>
+
+    <script>
+        function downloadCode(taskType) {
+            const codes = {
+                tokenizar: `# Tokenización de texto
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+# Descargar recursos necesarios
+nltk.download('punkt')
+
+def tokenizar_palabras(texto):
+    """Tokeniza el texto en palabras"""
+    return word_tokenize(texto)
+
+def tokenizar_oraciones(texto):
+    """Tokeniza el texto en oraciones"""
+    return sent_tokenize(texto)
+
+# Ejemplo de uso
+texto = "Python es un lenguaje de programación. Es muy útil para NLP."
+palabras = tokenizar_palabras(texto)
+oraciones = tokenizar_oraciones(texto)
+
+print("Palabras:", palabras)
+print("Oraciones:", oraciones)`,
+
+                longitud: `# Longitud de palabras
+def longitud_palabras(texto):
+    """Calcula la longitud de cada palabra en el texto"""
+    palabras = texto.split()
+    longitudes = {palabra: len(palabra) for palabra in palabras}
+    return longitudes
+
+def estadisticas_longitud(texto):
+    """Calcula estadísticas de longitud de palabras"""
+    palabras = texto.split()
+    longitudes = [len(palabra) for palabra in palabras]
+    
+    promedio = sum(longitudes) / len(longitudes) if longitudes else 0
+    maxima = max(longitudes) if longitudes else 0
+    minima = min(longitudes) if longitudes else 0
+    
+    return {
+        'promedio': promedio,
+        'maxima': maxima,
+        'minima': minima
+    }
+
+# Ejemplo de uso
+texto = "Python es un lenguaje de programación muy poderoso"
+print("Longitudes:", longitud_palabras(texto))
+print("Estadísticas:", estadisticas_longitud(texto))`,
+
+                contar: `# Contar palabras
+from collections import Counter
+
+def contar_palabras(texto):
+    """Cuenta la frecuencia de cada palabra en el texto"""
+    palabras = texto.lower().split()
+    return Counter(palabras)
+
+def palabras_mas_frecuentes(texto, n=5):
+    """Retorna las n palabras más frecuentes"""
+    contador = contar_palabras(texto)
+    return contador.most_common(n)
+
+# Ejemplo de uso
+texto = "Python es genial Python es poderoso Python es útil"
+frecuencias = contar_palabras(texto)
+print("Frecuencias:", frecuencias)
+print("Más frecuentes:", palabras_mas_frecuentes(texto, 3))`,
+
+                sentimiento: `# Análisis de sentimiento
+from textblob import TextBlob
+
+def analizar_sentimiento(texto):
+    """Analiza el sentimiento del texto"""
+    blob = TextBlob(texto)
+    polaridad = blob.sentiment.polarity
+    
+    if polaridad > 0:
+        sentimiento = "Positivo"
+    elif polaridad < 0:
+        sentimiento = "Negativo"
+    else:
+        sentimiento = "Neutral"
+    
+    return {
+        'sentimiento': sentimiento,
+        'polaridad': polaridad,
+        'subjetividad': blob.sentiment.subjectivity
+    }
+
+# Ejemplo de uso
+texto = "Me encanta programar en Python, es maravilloso"
+resultado = analizar_sentimiento(texto)
+print("Análisis:", resultado)`,
+
+                puntuacion: `# Eliminar signos de puntuación
+import string
+import re
+
+def eliminar_puntuacion(texto):
+    """Elimina todos los signos de puntuación del texto"""
+    return texto.translate(str.maketrans('', '', string.punctuation))
+
+def limpiar_texto(texto):
+    """Limpia el texto eliminando puntuación y espacios extra"""
+    # Eliminar puntuación
+    texto_limpio = eliminar_puntuacion(texto)
+    # Eliminar espacios múltiples
+    texto_limpio = re.sub(r'\s+', ' ', texto_limpio)
+    return texto_limpio.strip()
+
+# Ejemplo de uso
+texto = "¡Hola! ¿Cómo estás? Python es genial..."
+texto_limpio = eliminar_puntuacion(texto)
+print("Original:", texto)
+print("Limpio:", texto_limpio)`
+            };
+
+            const code = codes[taskType];
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${taskType}_python.py`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Smooth scroll
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.catalog').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
